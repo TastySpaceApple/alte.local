@@ -1,4 +1,4 @@
-from audio import AudioRecorder
+from audio_recorder import AudioRecorder 
 recorder = AudioRecorder('http://localhost:8000/altar')
 
 recorder.open('test.wav')

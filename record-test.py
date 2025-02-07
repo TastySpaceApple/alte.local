@@ -9,4 +9,5 @@ try:
     print(recorder.level)
 except KeyboardInterrupt:
   recorder.stop()
+  recorder.save()
   recorder.send()

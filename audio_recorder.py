@@ -44,7 +44,7 @@ class AudioRecorder:
     print('Finished recording')
 
     # Save the recorded data as a WAV file
-    wf = wave.open(recording_filename, 'wb')
+    wf = wave.open(self.recording_filename, 'wb')
     wf.setnchannels(channels)
     wf.setsampwidth(p.get_sample_size(sample_format))
     wf.setframerate(fs)
@@ -52,7 +52,7 @@ class AudioRecorder:
     wf.close()
 
   def send(self):
-    with open(recording_filename, 'rb') as f:
+    with open(self.recording_filename, 'rb') as f:
       requests.post(self.upload_route, files={'file': f})
 
   def stop(self):

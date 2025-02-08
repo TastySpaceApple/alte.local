@@ -28,6 +28,7 @@ def fadeLightLinearStep():
   if newLightValue < 10 and abs(step) < 1:
     newLightValue = 0
   lightPwm.ChangeDutyCycle(max(0, min(newLightValue, 100)))
+  time.sleep(0.1)
 
 pwm_thread = threading.Thread(target=fadeLightLinearStep, daemon=True)
 pwm_thread.start()
@@ -45,7 +46,6 @@ try:
     else:
       destLightValue = 0
       
-    fadeLightLinearStep()
     time.sleep(0.1)
 except KeyboardInterrupt:
   pass

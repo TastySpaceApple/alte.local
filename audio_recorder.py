@@ -19,7 +19,7 @@ class AudioRecorder:
     self.stream = None
     self.upload_route = upload_route
    
-  def open(self, recording_filename):
+  def open(self):
     timestamp = time.strftime("%Y%m%d-%H%M%S")
     recording_filename = 'recordings/recording' + timestamp + '.wav'
     self.recording_filename = recording_filename
@@ -27,6 +27,7 @@ class AudioRecorder:
                   input=True)    
     self.frames = [] 
     self.startRecordingTime = time.time()
+    self.isRecording = True
 
   def record(self):
     data = self.stream.read(chunk)
@@ -58,3 +59,9 @@ class AudioRecorder:
   def stop(self):
     self.stream.stop_stream()
     self.stream.close()
+    self.isRecording = False
+    
+  def done(self):
+    self.stop()
+    self.save()
+    self.send()

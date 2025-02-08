@@ -2,6 +2,9 @@ import time
 import threading
 import RPi.GPIO as GPIO
 import pigpio
+from audio_recorder import AudioRecorder 
+
+recorder = AudioRecorder('http://atra-bce32f116e3f.herokuapp.com/alte')
 
 # Pin definitions
 sensor1Pin = 2
@@ -21,6 +24,9 @@ light.set_PWM_dutycycle(lightPin, 0)  # 50% brightness
 lightValue = 0
 destLightValue = 0
 
+countRecordingIntent = 0
+recordingIntentThreshold = 10
+
 def fadeLightToDest():
   global lightValue
   global destLightValue
@@ -39,12 +45,25 @@ try:
       print("Pin 2 is HIGH")
     
     if GPIO.input(sensor1Pin) == GPIO.HIGH and GPIO.input(sensor2Pin) == GPIO.HIGH:
-      destLightValue = 100
+      countRecordingIntent = min(countRecordingIntent + 1, recordingIntentThreshold)
+      if not recorder.isRecording and countRecordingIntent == recordingIntentThreshold:
+        recorder.open()
+        print("Started Recording")
+      
+      if recorder.isRecording:
+        recorder.record()
     else:
+      countRecordingIntent = max(countRecordingIntent - 1, 0)
+      if recorder.isRecording and countRecordingIntent == 0:
+        print("Stopped Recording")
+        recorder.stop()
+        if recorder.getRecordingDuration() > 5:
+          recorder.save()
+          recorder.send()
+          print("sent")
       destLightValue = 0
       
     fadeLightToDest()
-    time.sleep(0.1)
 except KeyboardInterrupt:
   pass
 finally:

@@ -1,7 +1,7 @@
 from audio_recorder import AudioRecorder 
 recorder = AudioRecorder('http://atra-bce32f116e3f.herokuapp.com/alte')
 
-recorder.open('test.wav')
+recorder.open()
 
 try:
   while True:

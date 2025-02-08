@@ -1,11 +1,12 @@
 import time
 import threading
 import RPi.GPIO as GPIO
+import pigpio
 
 # Pin definitions
 sensor1Pin = 2
 sensor2Pin = 3
-lightPin = 4
+lightPin = 18
 
 # Set up GPIO
 GPIO.setmode(GPIO.BCM)
@@ -13,26 +14,19 @@ GPIO.setup(sensor1Pin, GPIO.IN)
 GPIO.setup(sensor2Pin, GPIO.IN)
 
 # light pin dims through PWM
-GPIO.setup(lightPin, GPIO.OUT)
+light = pigpio.pi()
+light.set_PWM_frequency(lightPin, 1000)  # Set to 1000 Hz
+light.set_PWM_dutycycle(lightPin, 0)  # 50% brightness
 
-lightPwm = GPIO.PWM(lightPin, 1000)
-lightPwm.start(0)
-
-destLightValue = 0
-
-def fadeLightLinearStep():
+def fadeLightToDest():
+  global lightValue
   global destLightValue
-  currentLightValue = lightPwm._dc
-  step = (destLightValue - currentLightValue) * 0.05  # Ease in ease out factor
-  newLightValue = currentLightValue + step
-  if newLightValue < 10 and abs(step) < 1:
-    newLightValue = 0
-  lightPwm.ChangeDutyCycle(max(0, min(newLightValue, 100)))
-  time.sleep(0.1)
-
-pwm_thread = threading.Thread(target=fadeLightLinearStep, daemon=True)
-pwm_thread.start()
-
+  if lightValue < destLightValue:
+    lightValue += 1
+  elif lightValue > destLightValue:
+    lightValue -= 1
+  light.set_PWM_dutycycle(lightPin, lightValue)
+  
 
 try:
   while True:
@@ -46,6 +40,7 @@ try:
     else:
       destLightValue = 0
       
+    fadeLightToDest()
     time.sleep(0.1)
 except KeyboardInterrupt:
   pass

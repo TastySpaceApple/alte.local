@@ -37,7 +37,7 @@ try:
     if GPIO.input(sensor1Pin) == GPIO.HIGH and GPIO.input(sensor2Pin) == GPIO.HIGH:
       destLightValue = 100
     else:
-      destLightValue = 50
+      destLightValue = 0
       
     fadeLightLinearStep()
     time.sleep(0.1)

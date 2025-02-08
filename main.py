@@ -23,9 +23,9 @@ destLightValue = 0
 def fadeLightLinearStep():
   global destLightValue
   if lightPwm._dc < destLightValue:
-    lightPwm.ChangeDutyCycle(max(lightPwm._dc + 0.4, 100))
+    lightPwm.ChangeDutyCycle(min(lightPwm._dc + 0.4, 100))
   elif lightPwm._dc > destLightValue:
-    lightPwm.ChangeDutyCycle(min(lightPwm._dc - 0.4, 0))
+    lightPwm.ChangeDutyCycle(max(lightPwm._dc - 0.4, 0))
 
 try:
   while True:

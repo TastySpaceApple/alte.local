@@ -18,6 +18,7 @@ class AudioRecorder:
   def __init__(self, upload_route):
     self.stream = None
     self.upload_route = upload_route
+    self.isRecording = False
    
   def open(self):
     timestamp = time.strftime("%Y%m%d-%H%M%S")

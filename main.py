@@ -18,6 +18,9 @@ light = pigpio.pi()
 light.set_PWM_frequency(lightPin, 1000)  # Set to 1000 Hz
 light.set_PWM_dutycycle(lightPin, 0)  # 50% brightness
 
+lightValue = 0
+destLightValue = 0
+
 def fadeLightToDest():
   global lightValue
   global destLightValue
@@ -46,5 +49,3 @@ except KeyboardInterrupt:
   pass
 finally:
   GPIO.cleanup()
-  lightPwm.stop()
-  pwm_thread.join()

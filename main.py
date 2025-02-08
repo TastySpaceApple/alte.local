@@ -15,7 +15,7 @@ GPIO.setup(sensor2Pin, GPIO.IN)
 # light pin dims through PWM
 GPIO.setup(lightPin, GPIO.OUT)
 
-lightPwm = GPIO.PWM(lightPin, 100)
+lightPwm = GPIO.PWM(lightPin, 500)
 lightPwm.start(0)
 
 destLightValue = 0
@@ -23,9 +23,9 @@ destLightValue = 0
 def fadeLightLinearStep():
   global destLightValue
   if lightPwm._dc < destLightValue:
-    lightPwm.ChangeDutyCycle(lightPwm._dc + 0.2)
+    lightPwm.ChangeDutyCycle(max(lightPwm._dc + 0.4, 100))
   elif lightPwm._dc > destLightValue:
-    lightPwm.ChangeDutyCycle(lightPwm._dc - 0.2)
+    lightPwm.ChangeDutyCycle(min(lightPwm._dc - 0.4, 0))
 
 try:
   while True:

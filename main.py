@@ -38,12 +38,7 @@ def fadeLightToDest():
   
 
 try:
-  while True:
-    if GPIO.input(sensor1Pin) == GPIO.HIGH:
-      print("Pin 1 is HIGH")
-    if GPIO.input(sensor2Pin) == GPIO.HIGH:
-      print("Pin 2 is HIGH")
-    
+  while True:    
     if GPIO.input(sensor1Pin) == GPIO.HIGH and GPIO.input(sensor2Pin) == GPIO.HIGH:
       destLightValue = 255
       countRecordingIntent = min(countRecordingIntent + 1, recordingIntentThreshold)

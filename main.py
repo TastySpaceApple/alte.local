@@ -25,9 +25,8 @@ def fadeLightLinearStep():
   currentLightValue = lightPwm._dc
   step = (destLightValue - currentLightValue) * 0.05  # Ease in ease out factor
   newLightValue = currentLightValue + step
-  if(newLightValue < 10){
+  if newLightValue < 10:
     newLightValue = 0
-  }
   lightPwm.ChangeDutyCycle(max(0, min(newLightValue, 100)))
 
 try:

@@ -1,5 +1,5 @@
 import time
-
+import threading
 import RPi.GPIO as GPIO
 
 # Pin definitions
@@ -15,7 +15,7 @@ GPIO.setup(sensor2Pin, GPIO.IN)
 # light pin dims through PWM
 GPIO.setup(lightPin, GPIO.OUT)
 
-lightPwm = GPIO.PWM(lightPin, 20)
+lightPwm = GPIO.PWM(lightPin, 1000)
 lightPwm.start(0)
 
 destLightValue = 0
@@ -28,6 +28,10 @@ def fadeLightLinearStep():
   if newLightValue < 10 and abs(step) < 1:
     newLightValue = 0
   lightPwm.ChangeDutyCycle(max(0, min(newLightValue, 100)))
+
+pwm_thread = threading.Thread(target=fadeLightLinearStep, daemon=True)
+pwm_thread.start()
+
 
 try:
   while True:
@@ -47,3 +51,5 @@ except KeyboardInterrupt:
   pass
 finally:
   GPIO.cleanup()
+  lightPwm.stop()
+  pwm_thread.join()

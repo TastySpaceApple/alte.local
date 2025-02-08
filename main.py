@@ -25,7 +25,7 @@ lightValue = 0
 destLightValue = 0
 
 countRecordingIntent = 0
-recordingIntentThreshold = 10
+recordingIntentThreshold = 200
 
 def fadeLightToDest():
   global lightValue
@@ -45,6 +45,7 @@ try:
       print("Pin 2 is HIGH")
     
     if GPIO.input(sensor1Pin) == GPIO.HIGH and GPIO.input(sensor2Pin) == GPIO.HIGH:
+      destLightValue = 255
       countRecordingIntent = min(countRecordingIntent + 1, recordingIntentThreshold)
       if not recorder.isRecording and countRecordingIntent == recordingIntentThreshold:
         recorder.open()
@@ -53,6 +54,7 @@ try:
       if recorder.isRecording:
         recorder.record()
     else:
+      destLightValue = 0
       countRecordingIntent = max(countRecordingIntent - 1, 0)
       if recorder.isRecording and countRecordingIntent == 0:
         print("Stopped Recording")
@@ -61,7 +63,6 @@ try:
           recorder.save()
           recorder.send()
           print("sent")
-      destLightValue = 0
       
     fadeLightToDest()
 except KeyboardInterrupt:

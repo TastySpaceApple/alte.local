@@ -11,3 +11,4 @@ except KeyboardInterrupt:
   recorder.stop()
   recorder.save()
   recorder.send()
+  print("sent")

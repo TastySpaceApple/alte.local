@@ -11,7 +11,21 @@ lightPin = 4
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(sensor1Pin, GPIO.IN)
 GPIO.setup(sensor2Pin, GPIO.IN)
+
+# light pin dims through PWM
 GPIO.setup(lightPin, GPIO.OUT)
+
+lightPwm = GPIO.PWM(lightPin, 100)
+lightPwm.start(0)
+
+destLightValue = 0
+
+def fadeLightLinearStep():
+  global destLightValue
+  if lightPwm._dc < destLightValue:
+    lightPwm.ChangeDutyCycle(lightPwm._dc + 1)
+  elif lightPwm._dc > destLightValue:
+    lightPwm.ChangeDutyCycle(lightPwm._dc - 1)
 
 try:
   while True:
@@ -19,10 +33,13 @@ try:
       print("Pin 1 is HIGH")
     if GPIO.input(sensor2Pin) == GPIO.HIGH:
       print("Pin 2 is HIGH")
+    
     if GPIO.input(sensor1Pin) == GPIO.HIGH and GPIO.input(sensor2Pin) == GPIO.HIGH:
-      GPIO.output(lightPin, GPIO.HIGH)
+      destLightValue = 100
     else:
-      GPIO.output(lightPin, GPIO.LOW)
+      destLightValue = 50
+      
+    fadeLightLinearStep()
     time.sleep(0.1)
 except KeyboardInterrupt:
   pass

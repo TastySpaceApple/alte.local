@@ -55,9 +55,8 @@ try:
         print("Stopped Recording")
         recorder.stop()
         if recorder.getRecordingDuration() > 5:
-          recorder.save()
-          recorder.send()
-          print("sent")
+          threading.Thread(target=recorder.done).start()
+          print("sending recording " + recorder.recording_filename)
       
     fadeLightToDest()
 except KeyboardInterrupt:

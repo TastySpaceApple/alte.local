@@ -35,7 +35,16 @@ def fadeLightToDest():
   elif lightValue > destLightValue:
     lightValue -= 1
   light.set_PWM_dutycycle(lightPin, lightValue)
-  
+  time.sleep(0.01)
+
+def fadeLightThread():
+  while True:
+    fadeLightToDest()
+
+# Start the fadeLightToDest function in a separate thread
+fade_thread = threading.Thread(target=fadeLightThread)
+fade_thread.daemon = True
+fade_thread.start()
 
 try:
   while True:    
@@ -58,8 +67,6 @@ try:
         if recorder.getRecordingDuration() > 5:
           threading.Thread(target=recorder.send).start()
           print("sending recording " + recorder.recording_filename)
-      
-    fadeLightToDest()
 except KeyboardInterrupt:
   pass
 finally:

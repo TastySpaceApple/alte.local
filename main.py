@@ -25,7 +25,7 @@ lightValue = 0
 destLightValue = 0
 
 countRecordingIntent = 0
-recordingIntentThreshold = 20
+recordingIntentThreshold = 200
 
 def fadeLightToDest():
   global lightValue
@@ -41,6 +41,8 @@ try:
   while True:    
     if recorder.isRecording:
       recorder.record()
+    else:
+      time.sleep(0.1)
 
     if GPIO.input(sensor1Pin) == GPIO.HIGH and GPIO.input(sensor2Pin) == GPIO.HIGH:
       destLightValue = 255

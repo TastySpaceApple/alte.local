@@ -25,7 +25,7 @@ lightValue = 0
 destLightValue = 0
 
 countRecordingIntent = 0
-recordingIntentThreshold = 200
+recordingIntentThreshold = 20
 
 def fadeLightToDest():
   global lightValue

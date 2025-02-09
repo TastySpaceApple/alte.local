@@ -39,18 +39,19 @@ def fadeLightToDest():
 
 try:
   while True:    
+    if recorder.isRecording:
+      recorder.record()
+
     if GPIO.input(sensor1Pin) == GPIO.HIGH and GPIO.input(sensor2Pin) == GPIO.HIGH:
       destLightValue = 255
       countRecordingIntent = min(countRecordingIntent + 1, recordingIntentThreshold)
       if not recorder.isRecording and countRecordingIntent == recordingIntentThreshold:
         recorder.open()
-        print("Started Recording")
-      
-      if recorder.isRecording:
-        recorder.record()
+        print("Started Recording")      
     else:
       destLightValue = 0
       countRecordingIntent = max(countRecordingIntent - 1, 0)
+      print(countRecordingIntent)
       if recorder.isRecording and countRecordingIntent == 0:
         print("Stopped Recording")
         recorder.stop()

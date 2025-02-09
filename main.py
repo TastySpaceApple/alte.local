@@ -41,8 +41,6 @@ try:
   while True:    
     if recorder.isRecording:
       recorder.record()
-    else:
-      time.sleep(0.1)
 
     if GPIO.input(sensor1Pin) == GPIO.HIGH and GPIO.input(sensor2Pin) == GPIO.HIGH:
       destLightValue = 255
@@ -53,7 +51,6 @@ try:
     else:
       destLightValue = 0
       countRecordingIntent = max(countRecordingIntent - 1, 0)
-      print(countRecordingIntent)
       if recorder.isRecording and countRecordingIntent == 0:
         print("Stopped Recording")
         recorder.stop()

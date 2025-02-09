@@ -54,8 +54,9 @@ try:
       if recorder.isRecording and countRecordingIntent == 0:
         print("Stopped Recording")
         recorder.stop()
+        recorder.save()
         if recorder.getRecordingDuration() > 5:
-          threading.Thread(target=recorder.done).start()
+          threading.Thread(target=recorder.send).start()
           print("sending recording " + recorder.recording_filename)
       
     fadeLightToDest()

@@ -19,6 +19,7 @@ class AudioRecorder:
     self.stream = None
     self.upload_route = upload_route
     self.isRecording = False
+    self.level = 0
    
   def open(self):
     timestamp = time.strftime("%Y%m%d-%H%M%S")
@@ -35,7 +36,6 @@ class AudioRecorder:
     rms = audioop.rms(data, 2)
     level = min(rms / (2.0 ** 16) * SCALE, 1.0)
     level = level ** EXPONENT
-    level = int(level * 155) + 100
     self.level = level
     self.frames.append(data)
 

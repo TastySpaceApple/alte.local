@@ -46,27 +46,49 @@ fade_thread = threading.Thread(target=fadeLightThread)
 fade_thread.daemon = True
 fade_thread.start()
 
+window_size = 20
+window_running_average_array = []
+for i in range(window_size):
+  window_running_average_array.append(0)
+
+def window_running_average(newValue):
+  global window_running_average_array
+  window_running_average_array.append(newValue)
+  if len(window_running_average_array) > window_size:
+    window_running_average_array.pop(0)
+  return sum(window_running_average_array) / len(window_running_average_array)
+
+recorderLevel = 0
+
 try:
   while True:    
     if recorder.isRecording:
       recorder.record()
+      print("Recording Level: " + str(recorder.level))
+      recorderLevel = window_running_average(recorder.level)
+      
+    sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.HIGH
+    sensor2Pressed = GPIO.input(sensor2Pin) == GPIO.HIGH
+      
 
-    if GPIO.input(sensor1Pin) == GPIO.HIGH and GPIO.input(sensor2Pin) == GPIO.HIGH:
+    if sensor1Pressed and sensor2Pressed:
       destLightValue = 255
       countRecordingIntent = min(countRecordingIntent + 1, recordingIntentThreshold)
       if not recorder.isRecording and countRecordingIntent == recordingIntentThreshold:
         recorder.open()
         print("Started Recording")      
-    else:
+    elif not sensor1Pressed and not sensor2Pressed:
       destLightValue = 0
-      countRecordingIntent = max(countRecordingIntent - 1, 0)
-      if recorder.isRecording and countRecordingIntent == 0:
+      countRecordingIntent = max(countRecordingIntent - 0.2, 0)
+      
+      if recorder.isRecording and countRecordingIntent <= 0 and recorderLevel < 0.1:
         print("Stopped Recording")
         recorder.stop()
         recorder.save()
         if recorder.getRecordingDuration() > 5:
           threading.Thread(target=recorder.send).start()
           print("sending recording " + recorder.recording_filename)
+          
 except KeyboardInterrupt:
   pass
 finally:

@@ -10,11 +10,11 @@ sensor1Pin = 3
 lightPin = 18
 
 pi = pigpio.pi()
+print(pi.connected)
 
 #setup GPIO input with pigpio
 pi.set_mode(sensor1Pin, pigpio.INPUT)
 pi.set_pull_up_down(sensor1Pin, pigpio.PUD_UP)
-
 
 # light pin dims through PWM
 pi.set_PWM_frequency(lightPin, 1000)  # Set to 1000 Hz

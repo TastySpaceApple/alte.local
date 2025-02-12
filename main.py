@@ -1,6 +1,5 @@
 import time
 import threading
-import RPi.GPIO as GPIO
 import pigpio
 from audio_recorder import AudioRecorder 
 
@@ -10,14 +9,10 @@ recorder = AudioRecorder('http://atra-bce32f116e3f.herokuapp.com/alte')
 sensor1Pin = 3
 lightPin = 18
 
-# Set up GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(sensor1Pin, GPIO.IN)
-
 # light pin dims through PWM
-light = pigpio.pi()
-light.set_PWM_frequency(lightPin, 1000)  # Set to 1000 Hz
-light.set_PWM_dutycycle(lightPin, 0)  # 50% brightness
+pi = pigpio.pi()
+pi.set_PWM_frequency(lightPin, 1000)  # Set to 1000 Hz
+pi.set_PWM_dutycycle(lightPin, 0)  # 50% brightness
 
 lightValue = 0
 destLightValue = 0
@@ -32,7 +27,7 @@ def fadeLightToDest():
     lightValue += 1
   elif lightValue > destLightValue:
     lightValue -= 1
-  light.set_PWM_dutycycle(lightPin, lightEaseIn(lightValue))
+  pi.set_PWM_dutycycle(lightPin, lightEaseIn(lightValue))
   time.sleep(0.01)
 
 def fadeLightThread():
@@ -64,7 +59,7 @@ try:
       recorder.record()
       recorderLevel = window_running_average(recorder.level)
       
-    sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.LOW      
+    sensor1Pressed = pi.read(sensor1Pin) == 0      
 
     if sensor1Pressed:
       destLightValue = 255

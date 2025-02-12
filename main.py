@@ -62,7 +62,7 @@ try:
   while True:    
     if recorder.isRecording:
       recorder.record()
-      print("Recording Level: " + str(recorder.level))
+      print("Recording Level: " + str(recorderLevel))
       recorderLevel = window_running_average(recorder.level)
       
     sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.LOW      

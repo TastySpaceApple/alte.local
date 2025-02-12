@@ -23,7 +23,7 @@ class AudioRecorder:
    
   def open(self):
     timestamp = time.strftime("%Y%m%d-%H%M%S")
-    recording_filename = 'recordings/recording' + timestamp + '.wav'
+    recording_filename = 'recordings/recording.wav'
     self.recording_filename = recording_filename
     self.stream = p.open(format=sample_format, channels=channels, rate=fs, frames_per_buffer=chunk,
                   input=True)    

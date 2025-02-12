@@ -7,8 +7,7 @@ from audio_recorder import AudioRecorder
 recorder = AudioRecorder('http://atra-bce32f116e3f.herokuapp.com/alte')
 
 # Pin definitions
-sensor1Pin = 2
-sensor2Pin = 3
+sensor1Pin = 3
 lightPin = 18
 
 # Set up GPIO
@@ -63,7 +62,7 @@ try:
       print("Recording Level: " + str(recorder.level))
       recorderLevel = window_running_average(recorder.level)
       
-    sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.HIGH      
+    sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.LOW      
 
     if sensor1Pressed:
       destLightValue = 255

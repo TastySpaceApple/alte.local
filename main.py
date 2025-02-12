@@ -23,9 +23,6 @@ light.set_PWM_dutycycle(lightPin, 0)  # 50% brightness
 lightValue = 0
 destLightValue = 0
 
-countRecordingIntent = 0
-recordingIntentThreshold = 20
-
 def fadeLightToDest():
   global lightValue
   global destLightValue
@@ -70,15 +67,13 @@ try:
 
     if sensor1Pressed:
       destLightValue = 255
-      countRecordingIntent = min(countRecordingIntent + 1, recordingIntentThreshold)
-      if not recorder.isRecording and countRecordingIntent == recordingIntentThreshold:
+      if not recorder.isRecording and lightValue == 255:
         recorder.open()
         print("Started Recording")      
     elif not sensor1Pressed:
       destLightValue = 0
-      countRecordingIntent = max(countRecordingIntent - 0.2, 0)
       
-      if recorder.isRecording and countRecordingIntent <= 0 and recorderLevel < 0.1:
+      if recorder.isRecording and lightValue == 0 and recorderLevel < 0.1:
         print("Stopped Recording")
         recorder.stop()
         recorder.save()

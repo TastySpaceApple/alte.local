@@ -22,8 +22,8 @@ light.set_PWM_dutycycle(lightPin, 0)  # 50% brightness
 lightValue = 0
 destLightValue = 0
 
-def lightEaseIn(value):
-  return value * value
+def lightEaseIn(value): # value is - to 255
+  return int(255 * (value / 255) ** 2)
 
 def fadeLightToDest():
   global lightValue

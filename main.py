@@ -14,7 +14,6 @@ lightPin = 18
 # Set up GPIO
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(sensor1Pin, GPIO.IN)
-GPIO.setup(sensor2Pin, GPIO.IN)
 
 # light pin dims through PWM
 light = pigpio.pi()
@@ -67,17 +66,15 @@ try:
       print("Recording Level: " + str(recorder.level))
       recorderLevel = window_running_average(recorder.level)
       
-    sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.HIGH
-    sensor2Pressed = GPIO.input(sensor2Pin) == GPIO.HIGH
-      
+    sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.HIGH      
 
-    if sensor1Pressed and sensor2Pressed:
+    if sensor1Pressed:
       destLightValue = 255
       countRecordingIntent = min(countRecordingIntent + 1, recordingIntentThreshold)
       if not recorder.isRecording and countRecordingIntent == recordingIntentThreshold:
         recorder.open()
         print("Started Recording")      
-    elif not sensor1Pressed and not sensor2Pressed:
+    elif not sensor1Pressed:
       destLightValue = 0
       countRecordingIntent = max(countRecordingIntent - 0.2, 0)
       

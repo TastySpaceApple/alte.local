@@ -13,6 +13,7 @@ pi = pigpio.pi()
 
 #setup GPIO input with pigpio
 pi.set_mode(sensor1Pin, pigpio.INPUT)
+pi.set_pull_up_down(sensor1Pin, pigpio.PUD_UP)
 
 
 # light pin dims through PWM

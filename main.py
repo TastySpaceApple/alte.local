@@ -9,8 +9,13 @@ recorder = AudioRecorder('http://atra-bce32f116e3f.herokuapp.com/alte')
 sensor1Pin = 3
 lightPin = 18
 
-# light pin dims through PWM
 pi = pigpio.pi()
+
+#setup GPIO input with pigpio
+pi.set_mode(sensor1Pin, pigpio.INPUT)
+
+
+# light pin dims through PWM
 pi.set_PWM_frequency(lightPin, 1000)  # Set to 1000 Hz
 pi.set_PWM_dutycycle(lightPin, 0)  # 50% brightness
 

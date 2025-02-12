@@ -22,6 +22,9 @@ light.set_PWM_dutycycle(lightPin, 0)  # 50% brightness
 lightValue = 0
 destLightValue = 0
 
+def lightEaseIn(value):
+  return value * value
+
 def fadeLightToDest():
   global lightValue
   global destLightValue
@@ -29,7 +32,7 @@ def fadeLightToDest():
     lightValue += 1
   elif lightValue > destLightValue:
     lightValue -= 1
-  light.set_PWM_dutycycle(lightPin, lightValue)
+  light.set_PWM_dutycycle(lightPin, lightEaseIn(lightValue))
   time.sleep(0.01)
 
 def fadeLightThread():
@@ -76,7 +79,7 @@ try:
         print("Stopped Recording")
         recorder.stop()
         recorder.save()
-        if recorder.getRecordingDuration() > 5:
+        if recorder.getRecordingDuration() > 15:
           threading.Thread(target=recorder.send).start()
           print("sending recording " + recorder.recording_filename)
           

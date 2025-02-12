@@ -62,7 +62,6 @@ try:
   while True:    
     if recorder.isRecording:
       recorder.record()
-      print("Recording Level: " + str(recorderLevel))
       recorderLevel = window_running_average(recorder.level)
       
     sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.LOW      
@@ -75,7 +74,7 @@ try:
     elif not sensor1Pressed:
       destLightValue = 0
       
-      if recorder.isRecording and lightValue == 0 and recorderLevel < 0.1:
+      if recorder.isRecording and lightValue == 0:
         print("Stopped Recording")
         recorder.stop()
         recorder.save()

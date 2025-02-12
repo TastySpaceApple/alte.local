@@ -1,6 +1,6 @@
 import time
 import threading
-import pigpio
+import RPi.GPIO as GPIO
 from audio_recorder import AudioRecorder 
 
 recorder = AudioRecorder('http://atra-bce32f116e3f.herokuapp.com/alte')
@@ -9,16 +9,14 @@ recorder = AudioRecorder('http://atra-bce32f116e3f.herokuapp.com/alte')
 sensor1Pin = 3
 lightPin = 18
 
-pi = pigpio.pi()
-print(pi.connected)
+# Setup GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(sensor1Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(lightPin, GPIO.OUT)
 
-#setup GPIO input with pigpio
-pi.set_mode(sensor1Pin, pigpio.INPUT)
-pi.set_pull_up_down(sensor1Pin, pigpio.PUD_UP)
-
-# light pin dims through PWM
-pi.set_PWM_frequency(lightPin, 1000)  # Set to 1000 Hz
-pi.set_PWM_dutycycle(lightPin, 0)  # 50% brightness
+# Setup PWM for light pin
+pwm = GPIO.PWM(lightPin, 1000)  # Set to 1000 Hz
+pwm.start(0)  # Start with 0% duty cycle
 
 lightValue = 0
 destLightValue = 0
@@ -33,7 +31,7 @@ def fadeLightToDest():
     lightValue += 1
   elif lightValue > destLightValue:
     lightValue -= 1
-  pi.set_PWM_dutycycle(lightPin, lightEaseIn(lightValue))
+  pwm.ChangeDutyCycle(lightEaseIn(lightValue) / 255 * 100)
   time.sleep(0.01)
 
 def fadeLightThread():
@@ -65,8 +63,8 @@ try:
       recorder.record()
       recorderLevel = window_running_average(recorder.level)
       
-    sensor1Pressed = pi.read(sensor1Pin) == 0      
-    print(pi.read(sensor1Pin))
+    sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.LOW      
+    print(GPIO.input(sensor1Pin))
 
     if sensor1Pressed:
       destLightValue = 255
@@ -87,5 +85,6 @@ try:
 except KeyboardInterrupt:
   pass
 finally:
-  pi.stop()
+  pwm.stop()
+  GPIO.cleanup()
   print("GPIO cleanup")

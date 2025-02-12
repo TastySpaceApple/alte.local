@@ -87,4 +87,5 @@ try:
 except KeyboardInterrupt:
   pass
 finally:
-  GPIO.cleanup()
+  pi.stop()
+  print("GPIO cleanup")

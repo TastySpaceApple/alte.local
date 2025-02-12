@@ -11,7 +11,7 @@ lightPin = 18
 
 # Setup GPIO
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(sensor1Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(sensor1Pin, GPIO.IN)
 GPIO.setup(lightPin, GPIO.OUT)
 
 # Setup PWM for light pin
@@ -63,8 +63,7 @@ try:
       recorder.record()
       recorderLevel = window_running_average(recorder.level)
       
-    sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.LOW      
-    print(GPIO.input(sensor1Pin))
+    sensor1Pressed = GPIO.input(sensor1Pin) == GPIO.LOW
 
     if sensor1Pressed:
       destLightValue = 255

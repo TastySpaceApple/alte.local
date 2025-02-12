@@ -65,6 +65,7 @@ try:
       recorderLevel = window_running_average(recorder.level)
       
     sensor1Pressed = pi.read(sensor1Pin) == 0      
+    print(pi.read(sensor1Pin))
 
     if sensor1Pressed:
       destLightValue = 255

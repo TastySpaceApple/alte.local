@@ -5,7 +5,10 @@ After=multi-user.target
 [Service]
 ExecStart=sudo /usr/bin/python3 main.py
 WorkingDirectory=/home/alte/alte.local
+StandardOutput=inherit
+StandardError=inherit
 Restart=always
+User=alte
 
 [Install]
 WantedBy=multi-user.target
